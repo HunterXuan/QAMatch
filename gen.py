@@ -6,15 +6,24 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfVectorizer
 import pysparnn.cluster_index as ci
 
+import pickle
+
+# path
+# 数据保存路径
+qa_path = './data/qa.json'
+tv_path = './data/tv.pkl'
+cp_path = './data/cp.pkl'
+
 # qa = [
 #	{
 #		'q': 'question',
 #		'a': 'answer'
 #	}
 # ]
-qa = json.load(open(r'./data/qa.json'))
+qa = json.load(open(qa_path))
 
 # Generate corpus
+# 将 QA 连接起来并分词
 corpus = []
 for id,item in enumerate(qa):
     tmp = item['q'] + item['a']
@@ -25,32 +34,23 @@ for id,item in enumerate(qa):
 # Generate bag of word
 # TfidfVectorizer is a combination of CountVectorizer and TfidfTransformer
 # Here we use TfidfVectorizer
-
 tv = TfidfVectorizer()
 
 # deal with corpus
 tv.fit(corpus)
 
 # get all words
+# 词典
 words = tv.get_feature_names()
-print(len(words))
 
-# get feature 
+# get feature
+# 获取每对 QA 的TF-IDF
 tfidf = tv.transform(corpus)
 
-cp = ci.MultiClusterIndex(tfidf, corpus)
+# build index
+# 创建索引
+cp = ci.MultiClusterIndex(tfidf, range(len(qa)))
 
-# search
-search_data = [
-	'爱情 公寓 陈美嘉',
-    '台湾 香港 沉没',
-    '杨利伟 是 谁',
-    '开水',
-    '分手 大师'
-]
-
-search_tfidf = tv.transform(search_data)
-
-print(cp.search(search_tfidf, k=1, k_clusters=2, return_distance=False))
-
-#print(features_vec.getnnz())
+# save
+pickle.dump(tv, open(tv_path, 'wb'))
+pickle.dump(cp, open(cp_path, 'wb'))
