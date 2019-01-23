@@ -26,14 +26,14 @@ A:推荐答案世界公认的第一位太空人是前苏联的尤里·阿列克�
 # build your own qa collection according to the following format
 # 如果需要更换或者扩展 QA 库，修改 data 目录下的 qa.json 文件，格式如下
 # [
-#	  {
-#		  'q': 'question',
-#		  'a': 'answer'
-#	  },
+#   {
+#     'q': 'question',
+#     'a': 'answer'
+#   },
 #   ...
 #   {
-#		  'q': 'question',
-#		  'a': 'answer'
-#	  }
+#     'q': 'question',
+#     'a': 'answer'
+#   }
 # ]
 ```
